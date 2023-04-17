@@ -5,10 +5,9 @@
     <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Tests.fs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\src\RandomSampler.fsproj" />
+    <Compile Include="Path.fs" />
+    <Compile Include="Specific.fs" />
+    <Compile Include="Build.fs" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

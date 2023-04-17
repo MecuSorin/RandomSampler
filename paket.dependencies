@@ -1,0 +1,22 @@
+source https://api.nuget.org/v3/index.json
+
+storage: none
+framework: netstandard2.0, netstandard2.1
+
+group Test
+framework: netstandard2.0, netstandard2.1, net7.0
+source https://api.nuget.org/v3/index.json
+storage: none
+    nuget Expecto
+
+group Build
+source https://api.nuget.org/v3/index.json
+framework: netstandard2.0, netstandard2.1, net7.0
+storage: none
+    nuget Argu
+    nuget Fake.Core.ReleaseNotes
+    nuget Fake.Core.Target
+    nuget Fake.DotNet.AssemblyInfoFile
+    nuget Fake.DotNet.Cli
+    nuget Fake.DotNet.Paket
+    nuget Fake.DotNet.Testing.Expecto

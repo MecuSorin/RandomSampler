@@ -24,15 +24,15 @@ let testOverwriting = test "Overwriting" {
     |> Cache.insertItem 11
     |> Cache.insertSequence [12..50]
     |> ignore
-    Expect.sequenceEqual (cache.GetSequence [0..9]) [41..50] "Same values" 
+    Expect.sequenceEqual (cache.GetSequence [0..9]) [41..50] "Same values"
 }
 let testExample = test "Sample example" {
-    let mySample = 
+    let mySample =
         Cache.create 2000 [0.0]                         // similar to python zero(2000)
-        |> Cache.insertSequence [1.0 .. 5000.0]         // insert 5000 elements that are truncated to the last cache capacity 2000 in our case 
+        |> Cache.insertSequence [1.0 .. 5000.0]         // insert 5000 elements that are truncated to the last cache capacity 2000 in our case
         |> Cache.insertSequence [5001.0 .. 10_000.0]    // insert another 5000 elements that will retain the last 2000 entries (again the cache capacity)
         |> Cache.sample 64                              // sample 64 unique entries from that current cache
-    Expect.isNonEmpty mySample "Should not be empty :)" 
+    Expect.isNonEmpty mySample "Should not be empty :)"
 }
 let tests = testList "Cache" [
     testSampling
@@ -44,4 +44,9 @@ let tests = testList "Cache" [
 
 [<EntryPoint>]
 let main args =
-    runTestsWithCLIArgs [] args tests
+    runTestsWithArgs
+        { defaultConfig with
+            verbosity = Expecto.Logging.LogLevel.Info
+            printer = Expecto.Impl.TestPrinters.summaryPrinter defaultConfig.printer }
+        [||]
+        tests
