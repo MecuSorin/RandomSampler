@@ -6,6 +6,9 @@
 
   <ItemGroup>
     <Compile Include="Cache.fs" />
+
+    <None Include="..\readme.md" Pack="true" PackagePath="\"/>
+    <None Include="..\license" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
 </Project>

@@ -85,3 +85,37 @@ Cache.create 2000 [0.0]                         // similar to python zero(2000)
  [61] 9787.0  
  [62] 8759.0  
  [63] 9644.0  
+
+ ```fsharp
+use cartPole = new CartPoleEnv(AvaloniaEnvViewer.Factory)
+let actionsCache = Cache.create actionsSize [0 .. actionsSize - 1]      // creates a cache for actions
+
+let replayBuffer = 
+    seq {
+        let mutable observations = cartPole.Reset()
+        for i = 1 to minReplaySize do
+            let action = actionsCache |> Cache.sample 1 |> Seq.head     // sampling just 1 item
+            let newObservations = cartPole.Step(action)
+            yield {| fromState = observations
+                     action = action
+                     reward = newObservations.Reward
+                     toState = newObservations.Observation |}
+            if newObservations.Done
+                then observations <- cartPole.Reset()
+                else observations <- newObservations.Observation
+    }
+    |> Cache.create bufferSize      // creating a cache that initially is filled with the first transition from sequence, then the rest of the sequence is added to the cache
+
+...
+
+let newTransitions =
+    replayBuffer
+    |> Cache.sample 64              // take a batch of random 64 recorded transitions
+    |> Seq.map actThenUpdateOnlineValueThenReturnTransition
+replayBuffer
+|> Cache.insertSequence newTransitions      // insert new transitions in the cache (overwriting the oldest transitions in the cache if the capacity is exceeded)
+```
+
+If you are a C# user then explore the API using intellisense on:
+- Mecu.Sampler.sample static method
+- Mecu.Cache class
