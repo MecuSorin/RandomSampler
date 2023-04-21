@@ -34,13 +34,21 @@ let testExample = test "Sample example" {
         |> Cache.sample 64                              // sample 64 unique entries from that current cache
     Expect.isNonEmpty mySample "Should not be empty :)"
 }
+let testCacheUpdatesShouldInvokeCleanup = test "Cache updates should invoke cleanup" {
+    let myCache = Cache.create 10 [1]
+    let mutable counter = 0
+    myCache.OnItemRemoved <- (fun item -> counter <- counter + item )
+    List.replicate 4 2
+        |> Cache.sequenceInsert myCache |> ignore
+    Expect.equal counter 4 "Sum of the items removed from cache"
+}
 let tests = testList "Cache" [
     testSampling
     testCreating
     testOverwriting
     testExample
+    testCacheUpdatesShouldInvokeCleanup
 ]
-
 
 [<EntryPoint>]
 let main args =
